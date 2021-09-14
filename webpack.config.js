@@ -1,12 +1,13 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const isDevlopemnt = process.env.NODE_ENV !== 'production';
 
 module.exports = {
     mode: isDevlopemnt ? 'development' : 'production',
     entry: path.resolve(__dirname, 'src', 'index.jsx'),
-    devtool:  isDevlopemnt? 'eval-source-map' : 'source-map',
+    devtool: isDevlopemnt ? 'eval-source-map' : 'source-map',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
@@ -16,18 +17,27 @@ module.exports = {
     },
     devServer: {
         static: path.resolve(__dirname, 'public'),
+        hot: true,
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'public', 'index.html')
-        })
-    ],
-    module:{
+        }),
+        isDevlopemnt && new ReactRefreshWebpackPlugin()
+    ].filter(Boolean),
+    module: {
         rules: [
             {
                 test: /\.jsx$/,
                 exclude: /node_modules/,
-                use: 'babel-loader'
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        plugins: [
+                            isDevlopemnt && require.resolve('react-refresh/babel')
+                        ].filter(Boolean),
+                    }
+                }
             },
             {
                 test: /\.scss$/,
@@ -36,6 +46,6 @@ module.exports = {
             }
         ]
     },
-    mode: 'development',
+    mode: 'development'
 
 }
