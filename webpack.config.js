@@ -6,7 +6,7 @@ const isDevlopemnt = process.env.NODE_ENV !== 'production';
 
 module.exports = {
     mode: isDevlopemnt ? 'development' : 'production',
-    entry: path.resolve(__dirname, 'src', 'index.jsx'),
+    entry: path.resolve(__dirname, 'src', 'index.tsx'),
     devtool: isDevlopemnt ? 'eval-source-map' : 'source-map',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -28,7 +28,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.jsx$/,
+                test: /\.(j|t)sx$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
